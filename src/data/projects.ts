@@ -14,6 +14,7 @@ export const projects: Project[] = [
     },
     stack: ['Laravel', 'MySQL', 'REST API', 'Integration'],
     image: '/img/Finance & Accounting App.png',
+    live: 'https://iron.alishabogaprima.com',
     repo: 'https://github.com/ahmdkenz',
   },
   {
@@ -58,7 +59,8 @@ export const projects: Project[] = [
       en: 'A complete online product catalog for Mustika Komputer so customers can browse the product list easily.',
     },
     stack: ['Catalog', 'Frontend', 'Responsive'],
-    image: '/img/e-catalog.jpg',
+    image: '/img/E-Catalog Mustika Komputer.png',
+    live: 'https://project-ecommerce-liard.vercel.app/',
     repo: 'https://github.com/ahmdkenz',
   },
   {
@@ -69,7 +71,8 @@ export const projects: Project[] = [
       en: 'A fast, user-friendly article site optimized for search engines, with categories and search built in.',
     },
     stack: ['SEO', 'CMS', 'Search'],
-    image: '/img/article-portal.jpg',
+    image: '/img/mudamelekfinansial.png',
+    live: 'https://project-website-article-tezt.vercel.app/',
     repo: 'https://github.com/ahmdkenz',
   },
   {
