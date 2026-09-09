@@ -48,10 +48,6 @@ export const ui = {
 
   'skills.h': { id: 'Keahlian', en: 'Skills' },
   'skills.tail': { id: 'Modul stack · arahkan kursor untuk menyalakan', en: 'Stack modules · hover to power on' },
-  'skills.g1': { id: 'Frontend', en: 'Frontend' },
-  'skills.g2': { id: 'Environment', en: 'Environment' },
-  'skills.g3': { id: 'Cloud', en: 'Cloud' },
-  'skills.unit': { id: 'modul', en: 'modules' },
 
   'exp.h': { id: 'Pengalaman', en: 'Experience' },
   'exp.tail': { id: 'Batch tracking · 04 entri', en: 'Batch tracking · 04 entries' },

@@ -18,13 +18,7 @@ export interface SkillModule {
   id: string // "ST-01"
   name: string // nama produk, tidak diterjemahkan
   desc: Bi
-  icon: 'vue' | 'react' | 'next' | 'html' | 'css' | 'tailwind' | 'laragon' | 'xampp' | 'gcp'
-}
-
-export interface SkillGroup {
-  code: string // "FE" | "ENV" | "CLD"
-  title: Bi
-  modules: SkillModule[]
+  icon: 'vue' | 'react' | 'next' | 'tailwind' | 'flutter' | 'dart' | 'laragon' | 'xampp' | 'gcp'
 }
 
 export interface ExperienceEntry {

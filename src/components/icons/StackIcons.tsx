@@ -41,24 +41,22 @@ export function NextIcon(props: IconProps) {
   )
 }
 
-export function Html5Icon(props: IconProps) {
+export function FlutterIcon(props: IconProps) {
   return (
-    <svg viewBox="0 0 128 128" role="img" aria-label="HTML5" {...props}>
-      <path fill="#E34F26" d="M19 11h90l-8.2 92.2L63.8 117l-36.6-13.8z" />
-      <path fill="#EF652A" d="M64 20v89.5l29.6-11.1L100.4 20z" />
-      <path fill="#EBEBEB" d="M64 55.5H49.2l-1-11.4H64V33H36.2l3.2 36.1H64zm0 30.6-12.4-3.4-.8-9H39.6l1.6 18.2L64 98z" />
-      <path fill="#FFF" d="M63.9 55.5v11.4h13.8l-1.3 14.6-12.5 3.4V98l22.9-6.4 3.4-38H63.9zm0-22.5v11.1h26.9L91.7 33z" />
+    <svg viewBox="0 0 128 128" role="img" aria-label="Flutter" {...props}>
+      <path fill="#02569B" d="M69 8 22 55l16 16L101 8z" />
+      <path fill="#13B9FD" d="M69 71 38 102l16 16 47-47H69z" />
+      <path fill="#02569B" d="m54 87 15 15 32-32H86z" opacity=".55" />
     </svg>
   )
 }
 
-export function Css3Icon(props: IconProps) {
+export function DartIcon(props: IconProps) {
   return (
-    <svg viewBox="0 0 128 128" role="img" aria-label="CSS3" {...props}>
-      <path fill="#1572B6" d="M19 11h90l-8.2 92.2L63.8 117l-36.6-13.8z" />
-      <path fill="#33A9DC" d="M64 20v89.5l29.6-11.1L100.4 20z" />
-      <path fill="#EBEBEB" d="M64 44.1H39.4l.9 11.2H64V44.1zm0 42-12.4-3.4-.8-9H39.6l1.6 18.2L64 98zM64 33H36.9l1 11.1H64z" />
-      <path fill="#FFF" d="M63.9 33v11.1h26.9l.9-11.1zm0 22.3v11.2h12.5l-1.2 13.2-11.3 3.1V98l22.9-6.4 3.3-36.3z" />
+    <svg viewBox="0 0 128 128" role="img" aria-label="Dart" {...props}>
+      <path fill="#00B4AB" d="M8 34 60 8l60 26-34 34z" />
+      <path fill="#0175C2" d="m120 34-34 34-34 34 34 18z" />
+      <path fill="#00D2B8" d="m52 68-44-34v58l30 30h50z" opacity=".9" />
     </svg>
   )
 }
@@ -117,9 +115,9 @@ export const stackIcons: Record<SkillModule['icon'], (props: IconProps) => React
   vue: VueIcon,
   react: ReactIcon,
   next: NextIcon,
-  html: Html5Icon,
-  css: Css3Icon,
   tailwind: TailwindIcon,
+  flutter: FlutterIcon,
+  dart: DartIcon,
   laragon: LaragonIcon,
   xampp: XamppIcon,
   gcp: GcpIcon,
