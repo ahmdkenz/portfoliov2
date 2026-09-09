@@ -92,6 +92,28 @@ export function XamppIcon(props: IconProps) {
   )
 }
 
+export function MysqlIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 128 128" role="img" aria-label="MySQL" {...props}>
+      <path
+        fill="#00618A"
+        d="M18 100c16-42 44-68 92-74-12 22-10 48 6 66-32 6-60 2-82-12 8 12 18 20 30 24-18 6-34 4-46-4z"
+      />
+      <path fill="#E48E00" d="M36 96c16 5 34 5 50-2l5 9c-18 7-38 7-56 0z" />
+    </svg>
+  )
+}
+
+export function FirebaseIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 128 128" role="img" aria-label="Firebase" {...props}>
+      <path fill="#FFA000" d="M23 101 39 9l15 27z" />
+      <path fill="#F57C00" d="M23 101 39 9l38 65z" />
+      <path fill="#FFCA28" d="M23 101 77 74l16 19-39 19z" />
+    </svg>
+  )
+}
+
 export function GcpIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 128 128" role="img" aria-label="Google Cloud Platform" {...props}>
@@ -120,5 +142,7 @@ export const stackIcons: Record<SkillModule['icon'], (props: IconProps) => React
   dart: DartIcon,
   laragon: LaragonIcon,
   xampp: XamppIcon,
+  mysql: MysqlIcon,
+  firebase: FirebaseIcon,
   gcp: GcpIcon,
 }

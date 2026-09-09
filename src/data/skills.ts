@@ -75,6 +75,24 @@ export const skillModules: SkillModule[] = [
   },
   {
     id: 'ST-09',
+    name: 'MySQL',
+    icon: 'mysql',
+    desc: {
+      id: 'Basis data relasional untuk menyimpan dan mengelola data aplikasi.',
+      en: 'Relational database for storing and managing application data.',
+    },
+  },
+  {
+    id: 'ST-10',
+    name: 'Firebase',
+    icon: 'firebase',
+    desc: {
+      id: 'Backend as a service untuk autentikasi, database realtime, dan hosting.',
+      en: 'Backend as a service for authentication, realtime database, and hosting.',
+    },
+  },
+  {
+    id: 'ST-11',
     name: 'Google Cloud',
     icon: 'gcp',
     desc: {

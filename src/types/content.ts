@@ -18,7 +18,18 @@ export interface SkillModule {
   id: string // "ST-01"
   name: string // nama produk, tidak diterjemahkan
   desc: Bi
-  icon: 'vue' | 'react' | 'next' | 'tailwind' | 'flutter' | 'dart' | 'laragon' | 'xampp' | 'gcp'
+  icon:
+    | 'vue'
+    | 'react'
+    | 'next'
+    | 'tailwind'
+    | 'flutter'
+    | 'dart'
+    | 'laragon'
+    | 'xampp'
+    | 'mysql'
+    | 'firebase'
+    | 'gcp'
 }
 
 export interface ExperienceEntry {
