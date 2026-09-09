@@ -7,7 +7,7 @@ export const ui = {
   'nav.experience': { id: 'Pengalaman', en: 'Experience' },
   'nav.projects': { id: 'Project', en: 'Projects' },
   'nav.contact': { id: 'Kontak', en: 'Contact' },
-  'nav.cta': { id: 'Rekrut saya', en: 'Hire me' },
+  'nav.cta': { id: 'Unduh CV', en: 'Download CV' },
 
   'rail.home': { id: 'Beranda', en: 'Home' },
   'rail.about': { id: 'Tentang', en: 'About' },
