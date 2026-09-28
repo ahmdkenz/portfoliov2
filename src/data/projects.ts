@@ -25,7 +25,8 @@ export const projects: Project[] = [
       en: 'An ERP for the F&B production line: master data, production flow, stock, and traceable reporting.',
     },
     stack: ['Laravel', 'Vue.js', 'MySQL', 'ERP'],
-    image: '/img/erp-manufacturing.jpg',
+    image: '/img/F&B Manufacturing ERP.png',
+    live: 'https://shz360.net/login',
     repo: 'https://github.com/ahmdkenz',
   },
   {
