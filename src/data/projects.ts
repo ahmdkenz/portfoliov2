@@ -49,7 +49,7 @@ export const projects: Project[] = [
       en: 'Process sales transactions, manage products, and print receipts straight from the browser.',
     },
     stack: ['POS', 'Transactions', 'Print'],
-    image: '/img/point-of-sale.jpg',
+    image: '/img/Sales & Services.png',
     repo: 'https://github.com/ahmdkenz',
   },
   {
