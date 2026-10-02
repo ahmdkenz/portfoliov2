@@ -6,6 +6,8 @@ export const ui = {
   'nav.skills': { id: 'Keahlian', en: 'Skills' },
   'nav.experience': { id: 'Pengalaman', en: 'Experience' },
   'nav.projects': { id: 'Project', en: 'Projects' },
+  'nav.case': { id: 'Case Study', en: 'Case Study' },
+  'nav.process': { id: 'Cara Kerja', en: 'Process' },
   'nav.contact': { id: 'Kontak', en: 'Contact' },
   'nav.cta': { id: 'Unduh CV', en: 'Download CV' },
 
@@ -14,6 +16,8 @@ export const ui = {
   'rail.skills': { id: 'Keahlian', en: 'Skills' },
   'rail.experience': { id: 'Pengalaman', en: 'Exp' },
   'rail.projects': { id: 'Project', en: 'Work' },
+  'rail.case': { id: 'Case', en: 'Case' },
+  'rail.process': { id: 'Proses', en: 'Process' },
   'rail.contact': { id: 'Kontak', en: 'Contact' },
 
   'status.running': { id: 'Berjalan', en: 'Running' },
@@ -57,6 +61,25 @@ export const ui = {
   'proj.flag': { id: 'Unggulan · 2026', en: 'Flagship · 2026' },
   'proj.live': { id: 'Tayang', en: 'Live' },
   'flow.1': { id: 'Produksi', en: 'Production' },
+
+  'cs.h': { id: 'Case Study', en: 'Case Study' },
+  'cs.tail': { id: 'Satu sistem, dibedah', en: 'One system, taken apart' },
+  'cs.k1': { id: 'Klien', en: 'Client' },
+  'cs.k2': { id: 'Sektor', en: 'Sector' },
+  'cs.k3': { id: 'Peran', en: 'Role' },
+  'cs.k4': { id: 'Stack', en: 'Stack' },
+  'cs.k5': { id: 'Periode', en: 'Period' },
+  'cs.f1': { id: 'Produksi', en: 'Production' },
+  'cs.f2': { id: 'Gudang', en: 'Warehouse' },
+  'cs.f3': { id: 'Jurnal', en: 'Journal' },
+  'cs.f4': { id: 'Laporan', en: 'Reports' },
+  'cs.b1h': { id: 'Masalah', en: 'The problem' },
+  'cs.b2h': { id: 'Batasan', en: 'Constraints' },
+  'cs.b3h': { id: 'Pendekatan', en: 'Approach' },
+  'cs.b4h': { id: 'Hasil', en: 'What came out of it' },
+
+  'pr.h': { id: 'Cara Kerja', en: 'How I Work' },
+  'pr.tail': { id: 'Enam stasiun, dari lantai ke rilis', en: 'Six stations, floor to release' },
 
   'ct.h': { id: 'Kontak', en: 'Contact' },
   'ct.tail': { id: 'Line terbuka', en: 'Line open' },

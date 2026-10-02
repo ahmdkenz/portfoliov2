@@ -11,7 +11,10 @@ import { About } from './components/sections/About'
 import { Skills } from './components/sections/Skills'
 import { Experience } from './components/sections/Experience'
 import { Projects } from './components/sections/Projects'
+import { CaseStudy } from './components/sections/CaseStudy'
+import { Process } from './components/sections/Process'
 import { Contact } from './components/sections/Contact'
+import { Metrics } from './components/sections/Metrics'
 import { Ticker } from './components/ui/Ticker'
 
 function App() {
@@ -25,11 +28,14 @@ function App() {
       <ConveyorRail />
       <main>
         <Hero />
+        <Metrics />
         <Ticker />
         <About />
         <Skills />
         <Experience />
         <Projects />
+        <CaseStudy />
+        <Process />
         <Contact />
       </main>
       <Footer />

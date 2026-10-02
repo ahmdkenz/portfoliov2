@@ -1,4 +1,4 @@
-import type { Bi, Lang, SpecRow } from '../types/content'
+import type { Bi, Lang, Metric, SpecRow } from '../types/content'
 
 export const contact = {
   email: 'ahmadnurhafidz462@gmail.com',
@@ -22,6 +22,14 @@ export const panelPlain = {
   role: 'Full-Stack Dev & IT Support',
   core: 'Vue · Laravel · MySQL',
 }
+
+/** strip angka di bawah Hero — ganti dengan angka nyata kalau berubah */
+export const metrics: Metric[] = [
+  { value: 5, suffix: '+', label: { id: 'Tahun di lapangan', en: 'Years on the floor' } },
+  { value: 8, label: { id: 'Sistem dikirim', en: 'Systems shipped' } },
+  { value: 2, label: { id: 'ERP terintegrasi', en: 'ERPs integrated' } },
+  { value: 4, label: { id: 'Perusahaan dilayani', en: 'Companies served' } },
+]
 
 export const aboutLede: { before: Bi; highlight: Bi } = {
   before: {

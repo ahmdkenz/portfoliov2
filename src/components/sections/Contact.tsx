@@ -35,7 +35,7 @@ export function Contact() {
   return (
     <section className="sect sect--contact" id="contact">
       <div className="wrap">
-        <SectionHead index="Sec 06" title={t('ct.h')} tail={t('ct.tail')} />
+        <SectionHead index="Sec 08" title={t('ct.h')} tail={t('ct.tail')} />
         <div className="contact-grid">
           <Reveal>
             <h3 className="big-line">

@@ -9,6 +9,8 @@ export const SECTION_IDS = [
   'skills',
   'experience',
   'projects',
+  'case',
+  'process',
   'contact',
 ] as const
 
@@ -58,4 +60,31 @@ export interface SpecRow {
   k: Bi
   v: Bi
   sub?: Bi
+}
+
+/** satu angka di strip bawah Hero */
+export interface Metric {
+  value: number
+  suffix?: string // "+" — dirender lewat CSS ::after
+  label: Bi
+}
+
+/** satu langkah bertitel (pendekatan case study, stasiun How I Work) */
+export interface TitledStep {
+  title: Bi
+  desc: Bi
+}
+
+export interface CaseStudy {
+  title: Bi
+  client: string
+  sector: Bi
+  role: Bi
+  stack: string
+  period: Bi
+  problem: Bi
+  constraints: Bi[]
+  steps: TitledStep[]
+  outcomes: { value: Bi; label: Bi }[]
+  note: Bi
 }
