@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 
 interface PanelRow {
   k: string
@@ -10,6 +10,8 @@ interface PanelProps {
   title: string
   rows: PanelRow[]
   showClock?: boolean
+  /** blok identitas di bawah header (foto + nama) */
+  lead?: ReactNode
 }
 
 function pad(n: number) {
@@ -32,7 +34,7 @@ function usePanelClock(enabled: boolean) {
 }
 
 /** Kartu bergaya panel HMI: header (LED + judul + jam opsional) diikuti baris key/value. */
-export function Panel({ title, rows, showClock }: PanelProps) {
+export function Panel({ title, rows, showClock, lead }: PanelProps) {
   const clock = usePanelClock(!!showClock)
 
   return (
@@ -48,6 +50,7 @@ export function Panel({ title, rows, showClock }: PanelProps) {
           </span>
         )}
       </div>
+      {lead && <div className="panel-id">{lead}</div>}
       {rows.map((row) => (
         <div className="panel-row" key={row.k}>
           <span className="k">{row.k}</span>

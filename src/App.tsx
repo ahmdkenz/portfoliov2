@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { MotionConfig } from 'motion/react'
 import { BootSequence } from './components/layout/BootSequence'
 import { TopBar } from './components/layout/TopBar'
@@ -17,11 +17,16 @@ import { Contact } from './components/sections/Contact'
 import { Metrics } from './components/sections/Metrics'
 import { Ticker } from './components/ui/Ticker'
 
+const SpaceBackground = lazy(() => import('./components/three/SpaceBackground'))
+
 function App() {
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   return (
     <MotionConfig reducedMotion="user">
+      <Suspense fallback={<div className="space-bg space-fallback" aria-hidden="true" />}>
+        <SpaceBackground />
+      </Suspense>
       <BootSequence />
       <TopBar drawerOpen={drawerOpen} onToggleDrawer={() => setDrawerOpen((o) => !o)} />
       <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />

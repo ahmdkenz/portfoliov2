@@ -1,6 +1,7 @@
 import { useT } from '../../context/LanguageContext'
 import { SectionHead } from '../ui/SectionHead'
 import { Reveal } from '../ui/Reveal'
+import { Tilt } from '../ui/Tilt'
 import { skillModules } from '../../data/skills'
 import { stackIcons } from '../icons/StackIcons'
 
@@ -16,7 +17,7 @@ export function Skills() {
           {skillModules.map((mod) => {
             const Icon = stackIcons[mod.icon]
             return (
-              <article className="mod" key={mod.id}>
+              <Tilt as="article" className="mod" key={mod.id}>
                 <div className="id">
                   <span>{mod.id}</span>
                   <span className="lamp" />
@@ -29,7 +30,7 @@ export function Skills() {
                     <i key={i} />
                   ))}
                 </div>
-              </article>
+              </Tilt>
             )
           })}
         </Reveal>

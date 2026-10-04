@@ -1,6 +1,7 @@
 import { useT } from '../../context/LanguageContext'
 import { useActiveSection } from '../../hooks/useActiveSection'
 import { SECTION_IDS } from '../../types/content'
+import { cvHref } from '../../data/profile'
 
 interface TopBarProps {
   drawerOpen: boolean
@@ -35,7 +36,7 @@ export function TopBar({ drawerOpen, onToggleDrawer }: TopBarProps) {
         </button>
       </div>
       <a
-        href="https://drive.google.com/uc?export=download&id=1_3n7AnD9Eq4T2VzQwCgksI3m_H-eLd2I"
+        href={cvHref}
         className="top-cta"
         target="_blank"
         rel="noopener noreferrer"

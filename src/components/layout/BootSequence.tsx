@@ -5,8 +5,9 @@ const LINES: { tag: string; text: string; bold?: string }[] = [
   { tag: '[ 00 ]', text: 'INIT — portfolio.system' },
   { tag: '[ 01 ]', text: 'MOUNT — vue / react / next' },
   { tag: '[ 02 ]', text: 'LINK — laravel · mysql · gcp' },
-  { tag: '[ 03 ]', text: 'OPERATOR — ', bold: 'ahmad nur hafidz' },
-  { tag: '[ 04 ]', text: 'LINE STATUS — ', bold: 'running' },
+  { tag: '[ 03 ]', text: 'DOCK — orbital.station / 07 modules' },
+  { tag: '[ 04 ]', text: 'OPERATOR — ', bold: 'ahmad nur hafidz' },
+  { tag: '[ 05 ]', text: 'LINE STATUS — ', bold: 'running' },
 ]
 
 const LINE_STAGGER = 140

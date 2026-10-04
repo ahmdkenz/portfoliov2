@@ -11,6 +11,9 @@ export const contact = {
   location: 'Jl. Raya Poncol RT.03/007, Ciracas, Jakarta Timur 13740',
 }
 
+/** unduhan CV — dipakai TopBar dan Hero */
+export const cvHref = 'https://drive.google.com/uc?export=download&id=1_3n7AnD9Eq4T2VzQwCgksI3m_H-eLd2I'
+
 /** frasa peran yang diketik ulang (typewriter), tidak masuk kamus `ui` karena bertipe array per bahasa */
 export const heroRoles: Record<Lang, string[]> = {
   id: ['Fullstack Developer', 'Vue.js & Laravel', 'ERP Manufaktur', 'Frontend & Backend'],

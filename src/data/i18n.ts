@@ -31,9 +31,12 @@ export const ui = {
   },
   'hero.cta1': { id: 'Lihat rekam jejak', en: 'See the track record' },
   'hero.cta2': { id: 'Lihat project', en: 'See the projects' },
+  'hero.hint': {
+    id: 'Klik satelit untuk menuju tiap section',
+    en: 'Click a satellite to jump to its section',
+  },
 
   'panel.title': { id: 'Status operator', en: 'Operator status' },
-  'panel.k1': { id: 'Posisi', en: 'Role' },
   'panel.k2': { id: 'Fokus', en: 'Focus' },
   'panel.k3': { id: 'Ketersediaan', en: 'Availability' },
   'panel.k4': { id: 'Inti', en: 'Core' },
@@ -41,11 +44,6 @@ export const ui = {
   'panel.v2': { id: 'ERP · Finance · Inventory', en: 'ERP · Finance · Inventory' },
   'panel.v3': { id: 'Terbuka untuk kerja', en: 'Open to work' },
   'panel.v5': { id: '5+ tahun di lapangan', en: '5+ years on the floor' },
-
-  'photo.ph': {
-    id: 'Simpan foto sebagai foto-ahmad.jpg di folder yang sama',
-    en: 'Save your photo as foto-ahmad.jpg in the same folder',
-  },
 
   'about.h': { id: 'Tentang', en: 'About' },
   'about.tail': { id: 'Profil operator', en: 'Operator profile' },

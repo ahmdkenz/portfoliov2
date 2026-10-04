@@ -1,6 +1,7 @@
 import { useT } from '../../context/LanguageContext'
 import { SectionHead } from '../ui/SectionHead'
 import { Reveal } from '../ui/Reveal'
+import { Tilt } from '../ui/Tilt'
 import { caseStudy } from '../../data/caseStudy'
 
 const FLOW = [
@@ -95,10 +96,10 @@ export function CaseStudy() {
               </div>
               <div className="case-out">
                 {cs.outcomes.map((o) => (
-                  <div className="cout" key={o.value.en}>
+                  <Tilt className="cout" key={o.value.en}>
                     <span className="big">{tr(o.value)}</span>
                     <span className="mono">{tr(o.label)}</span>
-                  </div>
+                  </Tilt>
                 ))}
               </div>
               <p className="case-note">{tr(cs.note)}</p>
