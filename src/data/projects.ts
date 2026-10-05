@@ -8,8 +8,8 @@ export const projects: Project[] = [
     title: { id: 'ERP Mobile System', en: 'ERP Mobile System' },
     subtitle: 'SHZ360 · Flutter',
     desc: {
-      id: 'Aplikasi Flutter pendamping ERP SHZ360 untuk staf gudang dan produksi di lapangan: purchase request, terima PO, DO masuk/keluar, proses produksi, lacak kode produksi, sampai cek kartu stok harian — langsung dari HP, tersinkron ke ERP lewat REST API sehingga angka di lantai produksi dan di kantor selalu sama.',
-      en: 'A Flutter companion app to the SHZ360 ERP for warehouse and production staff on the floor: purchase requests, PO receiving, inbound/outbound DOs, production runs, production-code tracing, and daily stock cards — straight from the phone, synced to the ERP over a REST API so the floor and the office see the same numbers.',
+      id: 'ERP Mobile System adalah aplikasi Flutter untuk staf gudang dan produksi di lapangan: purchase request, terima PO, DO masuk/keluar, proses produksi, lacak kode produksi, sampai cek kartu stok harian — langsung dari HP, tersinkron ke ERP lewat REST API sehingga angka di lantai produksi dan di kantor selalu sama.',
+      en: 'ERP Mobile System is a Flutter app for warehouse and production staff on the floor: purchase requests, PO receiving, inbound/outbound DOs, production runs, production-code tracing, and daily stock cards — straight from the phone, synced to the ERP over a REST API so the floor and the office see the same numbers.',
     },
     stack: ['Flutter', 'Dart', 'REST API', 'ERP'],
     image: '/img/Flutter Mobile Apps.jpeg',
