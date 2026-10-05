@@ -63,6 +63,12 @@ export interface Project {
   image: string // "/img/finance-app.jpg"
   live?: string // kosongkan kalau belum publik
   repo?: string
+  /** diagram alur kecil di kartu flagship */
+  flow?: { label: Bi; tag: string }[]
+  /** 'phone' = screenshot portrait ditampilkan dalam mockup HP */
+  frame?: 'phone'
+  /** baris mono kecil di bawah judul flagship, tidak diterjemahkan ("SHZ360 · Flutter") */
+  subtitle?: string
 }
 
 /** satu baris tabel spesifikasi di section About */

@@ -58,10 +58,10 @@ export const ui = {
   'exp.tail': { id: 'Batch tracking · 04 entri', en: 'Batch tracking · 04 entries' },
 
   'proj.h': { id: 'Project', en: 'Projects' },
-  'proj.tail': { id: '08 output', en: '08 outputs' },
+  'proj.tail': { id: '09 output', en: '09 outputs' },
   'proj.flag': { id: 'Unggulan · 2026', en: 'Flagship · 2026' },
   'proj.live': { id: 'Tayang', en: 'Live' },
-  'flow.1': { id: 'Produksi', en: 'Production' },
+  'proj.drag': { id: 'Drag untuk memutar', en: 'Drag to rotate' },
 
   'cs.h': { id: 'Case Study', en: 'Case Study' },
   'cs.tail': { id: 'Satu sistem, dibedah', en: 'One system, taken apart' },
