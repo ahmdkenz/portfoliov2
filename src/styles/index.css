@@ -120,7 +120,7 @@ button,input,textarea{font:inherit;color:inherit}
 @media(min-width:820px){.sect-head .tail{display:block}}
 
 /* modul kaca — dipakai bersama oleh kartu-kartu */
-.mod,.pcard,.feature,.card,.cout,.form,.panel,.spec,.case-spec{
+.pcard,.feature,.card,.cout,.form,.panel,.spec,.case-spec{
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
 }
 .tilt-host{display:grid}
@@ -371,31 +371,56 @@ body.ready .panel{opacity:1;transform:none}
 /* ============================================================
    SKILLS
    ============================================================ */
-.mods{display:grid;gap:12px;grid-template-columns:repeat(2,1fr)}
-@media(min-width:860px){.mods{grid-template-columns:repeat(4,1fr)}}
-.mod{position:relative;background:var(--color-glass);border:1px solid var(--color-edge);padding:18px 18px 16px;transition:border-color .3s,box-shadow .4s var(--ease-line);transform-style:preserve-3d}
-.mod::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--color-steel-dim);opacity:.5;transition:.35s var(--ease-line)}
-.mod:hover{border-color:rgba(255,182,39,.45);box-shadow:0 18px 40px -18px rgba(255,182,39,.28)}
-.mod:hover::before{background:var(--color-amber);opacity:1}
-.mod .id{font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.18em;color:var(--color-steel-dim);display:flex;justify-content:space-between;align-items:center}
-.mod .id .lamp{width:6px;height:6px;border-radius:50%;background:#3A444A;transition:.3s}
-.mod:hover .id .lamp{background:var(--color-amber);box-shadow:0 0 8px var(--color-amber)}
-.ico{
-  width:42px;height:42px;margin:14px 0 12px;display:block;
-  filter:grayscale(1) contrast(.85) opacity(.5);transform:translateZ(18px);
-  transition:filter .45s var(--ease-line),transform .45s var(--ease-line);
+.skills-lab{display:grid;gap:18px;grid-template-columns:1fr;margin-bottom:28px}
+@media(min-width:1000px){.skills-lab{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px;align-items:center}}
+.skills-lab--flat{grid-template-columns:1fr}
+.skills-stage-wrap{position:relative}
+.skills-stage{position:relative;height:clamp(420px,62vh,620px)}
+.skills-stage canvas{display:block}
+@media(min-width:768px){
+  .skills-stage canvas{cursor:grab}
+  .skills-stage canvas:active{cursor:grabbing}
 }
-.mod:hover .ico{filter:drop-shadow(0 0 10px rgba(255,255,255,.18));transform:translateZ(36px) scale(1.06) rotate(-3deg)}
-.mod h4{font-family:"Archivo";font-weight:800;font-size:19px;letter-spacing:-.02em;margin:0 0 5px;text-transform:uppercase;transform:translateZ(14px)}
-.mod p{margin:0;font-size:13px;color:var(--color-mist-dim);line-height:1.5}
-.mod .strip{display:flex;gap:3px;margin-top:14px}
-.mod .strip i{height:4px;flex:1;background:#1E252B;transition:background .3s var(--ease-line)}
-.mod:hover .strip i{background:var(--color-amber)}
-.mod:hover .strip i:nth-child(2){transition-delay:.05s}
-.mod:hover .strip i:nth-child(3){transition-delay:.1s}
-.mod:hover .strip i:nth-child(4){transition-delay:.15s}
-.mod:hover .strip i:nth-child(5){transition-delay:.2s}
-.mod:hover .strip i:nth-child(6){transition-delay:.25s}
+@media(max-width:767px){.skills-stage{height:360px}}
+.skills-hint{position:absolute;left:0;bottom:4px;display:none;align-items:center;gap:10px;color:var(--color-steel-dim)!important;font-size:10px}
+.skills-hint::before{content:"";width:7px;height:7px;border:1px solid var(--color-amber);transform:rotate(45deg)}
+@media(min-width:1000px){.skills-hint{display:flex}}
+
+/* panel readout */
+.readout{border:1px solid var(--color-edge);background:var(--color-glass);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.readout-top{display:flex;align-items:center;gap:10px;padding:11px 18px;border-bottom:1px solid var(--color-edge);background:rgba(255,255,255,.02)}
+.readout-top .led{width:7px;height:7px;border-radius:50%;background:var(--color-amber);animation:pulse 2.4s infinite}
+.readout-top .mono{color:var(--color-concrete)}
+.readout .readout-code{margin-left:auto;color:var(--color-amber)}
+.readout-body{padding:24px 18px 22px;animation:readout-in .35s var(--ease-line)}
+@keyframes readout-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.readout-ico{width:46px;height:46px;display:block;margin-bottom:16px;filter:drop-shadow(0 0 14px rgba(255,182,39,.25))}
+.readout h3{font-family:"Archivo",sans-serif;font-weight:900;text-transform:uppercase;letter-spacing:-.03em;font-size:clamp(28px,3.6vw,42px);line-height:1;margin:0 0 12px}
+.readout p{margin:0;color:var(--color-mist);font-size:15px;line-height:1.6;max-width:42ch}
+.readout-meta{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--color-edge)}
+.readout-meta>div{display:grid;gap:4px;padding:12px 18px}
+.readout-meta>div+div{border-left:1px solid var(--color-edge)}
+.readout-meta .k{font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-amber-dim)}
+.readout-meta .v{font-family:"IBM Plex Mono";font-size:12px;letter-spacing:.06em;color:var(--color-concrete)}
+
+/* chip stack per kategori */
+.skill-chips{display:grid;gap:14px 28px;grid-template-columns:1fr}
+@media(min-width:720px){.skill-chips{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1080px){.skill-chips{grid-template-columns:repeat(5,auto);justify-content:space-between}}
+.chip-group{display:grid;gap:9px;align-content:start}
+.chip-group-h{font-size:10px}
+.chip-group-h b{color:var(--color-amber-dim);font-weight:500}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px}
+.skill-chip{
+  display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:7px 12px 7px 9px;
+  border:1px solid var(--color-line);background:rgba(5,7,11,.45);color:var(--color-steel);
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  transition:border-color .25s,color .25s,background .25s;
+}
+.chip-ico{width:18px;height:18px;flex:0 0 auto;filter:grayscale(1) opacity(.55);transition:filter .3s var(--ease-line)}
+.skill-chip:hover,.skill-chip:focus-visible{color:var(--color-concrete);border-color:rgba(255,255,255,.22)}
+.skill-chip:hover .chip-ico,.skill-chip[aria-pressed="true"] .chip-ico{filter:none}
+.skill-chip[aria-pressed="true"]{color:var(--color-concrete);border-color:var(--color-amber);background:rgba(255,182,39,.08)}
 
 /* ============================================================
    EXPERIENCE

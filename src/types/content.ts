@@ -16,9 +16,19 @@ export const SECTION_IDS = [
 
 export type SectionId = (typeof SECTION_IDS)[number]
 
+/** kategori stack — satu orbit per kategori di scene Skills */
+export type SkillGroupId = 'fe' | 'mobile' | 'env' | 'data' | 'cloud'
+
+export interface SkillGroup {
+  id: SkillGroupId
+  code: string // "FE"
+  title: Bi
+}
+
 export interface SkillModule {
   id: string // "ST-01"
   name: string // nama produk, tidak diterjemahkan
+  group: SkillGroupId
   desc: Bi
   icon:
     | 'vue'

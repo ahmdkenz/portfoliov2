@@ -4,6 +4,8 @@ export const AMBER_DIM = '#B37D18'
 export const CHILL = '#6FCBE0'
 export const STEEL = '#8A9198'
 export const VOID = '#05070B'
+export const TEAL = '#3F8494'
+export const STEEL_LIGHT = '#C9CFD4'
 
 /** logam terang yang memantulkan Environment */
 export const TITANIUM = '#9AA5AE'

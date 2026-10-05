@@ -1,22 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import {
-  Environment,
-  Lightformer,
-  Line,
-  PerformanceMonitor,
-  PointMaterial,
-  Points,
-  PresentationControls,
-} from '@react-three/drei'
+import { Line, PerformanceMonitor, PointMaterial, Points, PresentationControls } from '@react-three/drei'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import type { Group } from 'three'
 import { Satellite, type SatelliteProps } from './Satellite'
 import { Station } from './Station'
 import { Planet } from './Planet'
 import { DustBelt } from './DustBelt'
+import { StudioLights } from './StudioLights'
+import { useStage } from './useStage'
 import { inSphere, starColors } from './random'
-import { AMBER, AMBER_DIM, CHILL, STEEL, VOID } from './palette'
+import { AMBER, AMBER_DIM, CHILL, STEEL, TEAL, VOID } from './palette'
 import { useActiveSection } from '../../hooks/useActiveSection'
 import type { SectionId } from '../../types/content'
 
@@ -24,7 +18,7 @@ import type { SectionId } from '../../types/content'
 const RINGS = [
   { radius: 1.9, tilt: [0.32, 0, 0.18] as const, speed: 0.11, tint: AMBER_DIM, dashed: false },
   { radius: 2.35, tilt: [-0.22, 0, -0.1] as const, speed: 0.075, tint: STEEL, dashed: false },
-  { radius: 2.8, tilt: [0.12, 0, 0.3] as const, speed: 0.05, tint: '#3F8494', dashed: true },
+  { radius: 2.8, tilt: [0.12, 0, 0.3] as const, speed: 0.05, tint: TEAL, dashed: true },
 ]
 
 const SATS: { id: SatelliteProps['id']; no: string; ring: number; phase: number }[] = [
@@ -71,18 +65,6 @@ function HeroStars({ count }: { count: number }) {
         <PointMaterial transparent vertexColors size={0.12} sizeAttenuation depthWrite={false} fog={false} />
       </Points>
     </group>
-  )
-}
-
-/** Environment lokal dari Lightformer — pantulan logam tanpa mengunduh HDR. */
-function StudioLights() {
-  return (
-    <Environment resolution={256} frames={1}>
-      <Lightformer form="rect" intensity={2.2} color="#ffffff" position={[0, 6, 2]} scale={[12, 2, 1]} rotation-x={Math.PI / 2} />
-      <Lightformer form="rect" intensity={3} color={AMBER} position={[6, 1, 2]} scale={[3, 5, 1]} rotation-y={-Math.PI / 2} />
-      <Lightformer form="rect" intensity={2} color={CHILL} position={[-6, 0, -3]} scale={[4, 6, 1]} rotation-y={Math.PI / 2} />
-      <Lightformer form="ring" intensity={1.2} color="#ffffff" position={[0, -4, 4]} scale={3} />
-    </Environment>
   )
 }
 
@@ -227,28 +209,10 @@ function Scene({ pointer, rich }: SceneProps) {
 
 /** Scene Home "Orbital Control Room". Render dijeda saat Hero keluar layar. */
 export default function OrbitalStation() {
-  const host = useRef<HTMLDivElement>(null)
-  const pointer = useRef({ x: 0, y: 0 })
-  const [visible, setVisible] = useState(true)
+  const { host, pointer, visible } = useStage()
   // bloom + trail hanya di desktop, dan dimatikan bila FPS turun
   const [rich, setRich] = useState(() => window.innerWidth >= 1000)
   const [dpr, setDpr] = useState(1.75)
-
-  useEffect(() => {
-    const el = host.current
-    if (!el) return
-    const io = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting))
-    io.observe(el)
-    const onMove = (e: PointerEvent) => {
-      pointer.current.x = (e.clientX / window.innerWidth) * 2 - 1
-      pointer.current.y = -((e.clientY / window.innerHeight) * 2 - 1)
-    }
-    window.addEventListener('pointermove', onMove, { passive: true })
-    return () => {
-      io.disconnect()
-      window.removeEventListener('pointermove', onMove)
-    }
-  }, [])
 
   return (
     <div className="hero-stage" ref={host}>

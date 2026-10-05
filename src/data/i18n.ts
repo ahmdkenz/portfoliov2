@@ -49,7 +49,10 @@ export const ui = {
   'about.tail': { id: 'Profil operator', en: 'Operator profile' },
 
   'skills.h': { id: 'Keahlian', en: 'Skills' },
-  'skills.tail': { id: 'Modul stack · arahkan kursor untuk menyalakan', en: 'Stack modules · hover to power on' },
+  'skills.tail': { id: 'Inti stack · arahkan atau klik untuk membaca', en: 'Stack core · hover or click to read' },
+  'skills.readout': { id: 'Readout modul', en: 'Module readout' },
+  'skills.hint': { id: 'Drag untuk memutar · klik modul untuk membaca', en: 'Drag to rotate · click a module to read it' },
+  'skills.orbit': { id: 'Orbit', en: 'Orbit' },
 
   'exp.h': { id: 'Pengalaman', en: 'Experience' },
   'exp.tail': { id: 'Batch tracking · 04 entri', en: 'Batch tracking · 04 entries' },
