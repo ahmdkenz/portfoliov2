@@ -1,37 +1,26 @@
 import { useMemo, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
-import type { Group } from 'three'
-import { inSphere } from './random'
+import type { Group, PointsMaterial as PointMaterialType } from 'three'
+import { inSphere, starColors } from './random'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import { useWebGL } from '../../hooks/useWebGL'
-
-const AMBER = [1, 0.714, 0.153]
-const CHILL = [0.435, 0.796, 0.878]
-
-/** Lapis dekat: jarang, sebagian kecil titik diberi warna aksen amber/cyan. */
-function nearColors(count: number) {
-  const colors = new Float32Array(count * 3)
-  for (let i = 0; i < count; i++) {
-    const roll = Math.random()
-    const c = roll < 0.08 ? AMBER : roll < 0.16 ? CHILL : [0.85, 0.87, 0.9]
-    colors.set(c, i * 3)
-  }
-  return colors
-}
 
 function Starfield({ reduced }: { reduced: boolean }) {
   const far = useRef<Group>(null)
   const near = useRef<Group>(null)
+  const bright = useRef<Group>(null)
+  const twinkle = useRef<PointMaterialType>(null)
   const mobile = window.innerWidth < 768
 
-  const farPos = useMemo(() => inSphere(mobile ? 1500 : 4000, 1.2), [mobile])
+  const farPos = useMemo(() => inSphere(mobile ? 1800 : 4500, 1.2), [mobile])
   const nearCount = mobile ? 160 : 420
   const nearPos = useMemo(() => inSphere(nearCount, 0.9), [nearCount])
-  const nearCol = useMemo(() => nearColors(nearCount), [nearCount])
+  const nearCol = useMemo(() => starColors(nearCount), [nearCount])
+  const brightPos = useMemo(() => inSphere(mobile ? 30 : 70, 1.1), [mobile])
 
-  useFrame((_, delta) => {
-    if (reduced || !far.current || !near.current) return
+  useFrame((state, delta) => {
+    if (reduced || !far.current || !near.current || !bright.current) return
     const scroll = window.scrollY
     far.current.rotation.x -= delta / 14
     far.current.rotation.y -= delta / 20
@@ -39,18 +28,26 @@ function Starfield({ reduced }: { reduced: boolean }) {
     far.current.position.y = scroll * 0.00012
     near.current.position.y = scroll * 0.00045
     near.current.rotation.y -= delta / 40
+    bright.current.position.y = scroll * 0.0003
+    bright.current.rotation.y -= delta / 30
+    if (twinkle.current) twinkle.current.opacity = 0.55 + Math.sin(state.clock.elapsedTime * 1.7) * 0.35
   })
 
   return (
     <group rotation={[0, 0, Math.PI / 4]}>
       <group ref={far}>
         <Points positions={farPos} stride={3} frustumCulled={false}>
-          <PointMaterial transparent color="#cfd6dc" size={0.0022} sizeAttenuation depthWrite={false} opacity={0.75} />
+          <PointMaterial transparent color="#dfe5ea" size={0.003} sizeAttenuation depthWrite={false} opacity={0.9} />
         </Points>
       </group>
       <group ref={near}>
         <Points positions={nearPos} colors={nearCol} stride={3} frustumCulled={false}>
-          <PointMaterial transparent vertexColors size={0.0045} sizeAttenuation depthWrite={false} />
+          <PointMaterial transparent vertexColors size={0.0055} sizeAttenuation depthWrite={false} />
+        </Points>
+      </group>
+      <group ref={bright}>
+        <Points positions={brightPos} stride={3} frustumCulled={false}>
+          <PointMaterial ref={twinkle} transparent color="#ffffff" size={0.01} sizeAttenuation depthWrite={false} />
         </Points>
       </group>
     </group>

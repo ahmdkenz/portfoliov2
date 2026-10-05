@@ -58,9 +58,9 @@
    ============================================================ */
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;background:var(--color-void)}
+/* latar hanya di <html>: background <body> akan digambar DI ATAS canvas z-index:-1 dan menutupi starfield */
 body{
   margin:0;
-  background:var(--color-void);
   color:var(--color-concrete);
   font-family:"IBM Plex Sans",system-ui,sans-serif;
   font-size:16px;
@@ -240,8 +240,17 @@ body.ready .hud{transform:none}
   position:relative;min-height:100svh;display:flex;align-items:center;padding:110px 0 90px;overflow:hidden;
   background:radial-gradient(55% 50% at 74% 36%,rgba(255,182,39,.06),transparent 70%);
 }
-.hero-stage{position:absolute;inset:0;z-index:0}
+/* canvas Hero opaque (Bloom); bagian bawahnya dipudarkan supaya menyambung ke starfield global */
+.hero-stage{
+  position:absolute;inset:0;z-index:0;
+  -webkit-mask-image:linear-gradient(180deg,#000 78%,transparent);mask-image:linear-gradient(180deg,#000 78%,transparent);
+}
 .hero-stage canvas{display:block}
+@media(min-width:1000px){
+  .hero-stage canvas{cursor:grab}
+  .hero-stage canvas:active{cursor:grabbing}
+  .sat-hover .hero-stage canvas{cursor:pointer}
+}
 .hero-stage--static{display:grid;place-items:center end;padding-right:4vw}
 .hero-stage--static svg{width:min(640px,58vw);height:auto;margin-top:-12vh}
 @media(max-width:999px){
@@ -281,11 +290,11 @@ body.ready .hero-hint{opacity:1}
 /* label satelit (drei <Html>) */
 .sat-label{
   display:inline-flex;align-items:center;gap:7px;white-space:nowrap;cursor:pointer;
-  padding:4px 9px;border:1px solid var(--color-edge);background:rgba(5,7,11,.66);
-  font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-steel);
+  padding:4px 9px;border:1px solid rgba(179,125,24,.55);background:rgba(5,7,11,.72);
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-concrete);
   transition:color .25s,border-color .25s,background .25s;
 }
-.sat-label .no{color:var(--color-steel-dim)}
+.sat-label .no{color:var(--color-amber)}
 .sat-label.is-active{color:var(--color-chill);border-color:rgba(111,203,224,.35)}
 .sat-label.is-hover{color:var(--color-ink);background:var(--color-amber);border-color:var(--color-amber)}
 .sat-label.is-hover .no{color:var(--color-ink)}

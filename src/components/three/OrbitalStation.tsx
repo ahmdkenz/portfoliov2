@@ -1,21 +1,30 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Line } from '@react-three/drei'
-import type { Group, MeshStandardMaterial } from 'three'
+import {
+  Environment,
+  Lightformer,
+  Line,
+  PerformanceMonitor,
+  PointMaterial,
+  Points,
+  PresentationControls,
+} from '@react-three/drei'
+import { Bloom, EffectComposer } from '@react-three/postprocessing'
+import type { Group } from 'three'
 import { Satellite, type SatelliteProps } from './Satellite'
+import { Station } from './Station'
+import { Planet } from './Planet'
+import { DustBelt } from './DustBelt'
+import { inSphere, starColors } from './random'
+import { AMBER, AMBER_DIM, CHILL, STEEL, VOID } from './palette'
 import { useActiveSection } from '../../hooks/useActiveSection'
 import type { SectionId } from '../../types/content'
 
-const AMBER = '#FFB627'
-const AMBER_DIM = '#B37D18'
-const CHILL = '#6FCBE0'
-const HULL = '#2a333b'
-
-/** Tiga bidang orbit; satelit dibagi ke bidang-bidang ini (radius, kemiringan, kecepatan). */
+/** Tiga bidang orbit; satelit dibagi ke bidang-bidang ini. Tiap cincin punya nada warna sendiri. */
 const RINGS = [
-  { radius: 2.1, tilt: [0.32, 0, 0.18] as const, speed: 0.11 },
-  { radius: 2.75, tilt: [-0.22, 0, -0.1] as const, speed: 0.075 },
-  { radius: 3.35, tilt: [0.12, 0, 0.3] as const, speed: 0.05 },
+  { radius: 1.9, tilt: [0.32, 0, 0.18] as const, speed: 0.11, tint: AMBER_DIM, dashed: false },
+  { radius: 2.35, tilt: [-0.22, 0, -0.1] as const, speed: 0.075, tint: STEEL, dashed: false },
+  { radius: 2.8, tilt: [0.12, 0, 0.3] as const, speed: 0.05, tint: '#3F8494', dashed: true },
 ]
 
 const SATS: { id: SatelliteProps['id']; no: string; ring: number; phase: number }[] = [
@@ -28,149 +37,76 @@ const SATS: { id: SatelliteProps['id']; no: string; ring: number; phase: number 
   { id: 'contact', no: '08', ring: 2, phase: 5.0 },
 ]
 
-function circle(radius: number, segments = 128) {
+/** Kamera dasar. Ukuran frame dihitung dari angka ini, bukan dari kamera yang sedang bergerak (intro/parallax). */
+const CAM_Z = 9
+const FOV = 40
+const FRAME_H = 2 * CAM_Z * Math.tan((FOV / 2) * (Math.PI / 180))
+const INTRO_SECONDS = 1.6
+
+function circle(radius: number, segments = 160) {
   return Array.from({ length: segments + 1 }, (_, i) => {
     const a = (i / segments) * Math.PI * 2
     return [Math.cos(a) * radius, 0, Math.sin(a) * radius] as [number, number, number]
   })
 }
 
-/** Stasiun inti: badan silinder, cincin dok berputar dengan sapuan cahaya amber, truss + panel, lampu berdenyut. */
-function Station() {
-  const dock = useRef<Group>(null)
-  const sweep = useRef<Group>(null)
-  const dataRing = useRef<Group>(null)
-  const lamp = useRef<MeshStandardMaterial>(null)
+/** Bintang milik canvas Hero sendiri — canvas ini opaque karena Bloom, jadi starfield global tidak terlihat di baliknya. */
+function HeroStars({ count }: { count: number }) {
+  const ref = useRef<Group>(null)
+  const positions = useMemo(() => {
+    const p = inSphere(count, 30)
+    // dorong ke belakang supaya semua bintang ada di latar
+    for (let i = 2; i < p.length; i += 3) p[i] = -Math.abs(p[i]) - 8
+    return p
+  }, [count])
+  const colors = useMemo(() => starColors(count, 0.06), [count])
 
-  useFrame((state, delta) => {
-    if (dock.current) dock.current.rotation.y += delta * 0.14
-    if (sweep.current) sweep.current.rotation.y -= delta * 0.9
-    if (dataRing.current) dataRing.current.rotation.y -= delta * 0.05
-    if (lamp.current) {
-      // ritme sama dengan LED brand di TopBar (2.4 detik)
-      const k = (Math.sin((state.clock.elapsedTime / 2.4) * Math.PI * 2) + 1) / 2
-      lamp.current.emissiveIntensity = 0.5 + k * 2.6
-    }
+  useFrame((_, delta) => {
+    if (ref.current) ref.current.rotation.z += delta * 0.004
   })
 
-  const hull = <meshStandardMaterial color={HULL} metalness={0.55} roughness={0.4} />
-
   return (
-    <group rotation={[0.38, 0, -0.14]}>
-      {/* badan */}
-      <mesh>
-        <cylinderGeometry args={[0.42, 0.42, 1.3, 28]} />
-        {hull}
-      </mesh>
-      <mesh position={[0, 0.82, 0]}>
-        <coneGeometry args={[0.32, 0.34, 28]} />
-        {hull}
-      </mesh>
-      <mesh position={[0, 1.2, 0]}>
-        <cylinderGeometry args={[0.012, 0.012, 0.5, 6]} />
-        <meshStandardMaterial color="#8A9198" />
-      </mesh>
-      <mesh position={[0, -0.95, 0]}>
-        <cylinderGeometry args={[0.24, 0.34, 0.3, 28]} />
-        {hull}
-      </mesh>
-      {[-0.36, 0.36].map((y) => (
-        <mesh key={y} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.43, 0.018, 8, 48]} />
-          <meshStandardMaterial color={AMBER_DIM} emissive={AMBER_DIM} emissiveIntensity={0.6} />
-        </mesh>
-      ))}
-
-      {/* cincin dok + jari-jari + modul */}
-      <group ref={dock} position={[0, 0.05, 0]}>
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[1.25, 0.05, 12, 96]} />
-          {hull}
-        </mesh>
-        {[0, 1, 2, 3].map((i) => (
-          <mesh key={i} rotation={[0, (i * Math.PI) / 2, 0]} position={[0, 0, 0]}>
-            <boxGeometry args={[2.5, 0.025, 0.025]} />
-            <meshStandardMaterial color="#3a444a" metalness={0.6} roughness={0.4} />
-          </mesh>
-        ))}
-        {Array.from({ length: 8 }, (_, i) => {
-          const a = (i / 8) * Math.PI * 2 + Math.PI / 8
-          return (
-            <mesh key={i} position={[Math.cos(a) * 1.25, 0, Math.sin(a) * 1.25]} rotation={[0, -a, 0]}>
-              <boxGeometry args={[0.16, 0.12, 0.22]} />
-              {hull}
-            </mesh>
-          )
-        })}
-        <group ref={sweep}>
-          <mesh rotation={[Math.PI / 2, 0, 0]}>
-            <torusGeometry args={[1.25, 0.068, 8, 40, Math.PI / 5]} />
-            <meshBasicMaterial color={AMBER} transparent opacity={0.85} />
-          </mesh>
-        </group>
-      </group>
-
-      {/* cincin data tipis, cyan */}
-      <group ref={dataRing} rotation={[0.5, 0, 0.2]}>
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[1.7, 0.008, 6, 128]} />
-          <meshBasicMaterial color={CHILL} transparent opacity={0.4} />
-        </mesh>
-      </group>
-
-      {/* truss + panel surya */}
-      <mesh position={[0, -0.2, 0]}>
-        <boxGeometry args={[3.6, 0.045, 0.045]} />
-        <meshStandardMaterial color="#3a444a" metalness={0.6} roughness={0.4} />
-      </mesh>
-      {[-1, 1].map((side) => (
-        <group key={side} position={[side * 2.25, -0.2, 0]}>
-          {[-0.26, 0.26].map((z) => (
-            <mesh key={z} position={[0, 0, z]} rotation={[0.25, 0, 0]}>
-              <boxGeometry args={[0.95, 0.02, 0.44]} />
-              <meshStandardMaterial color="#132131" metalness={0.3} roughness={0.55} emissive="#0b1a2a" />
-            </mesh>
-          ))}
-        </group>
-      ))}
-
-      {/* lampu status */}
-      {[
-        [0, 0.12, 0.43],
-        [0, 1.45, 0],
-        [-2.72, -0.2, 0],
-        [2.72, -0.2, 0],
-      ].map((p, i) => (
-        <mesh key={i} position={p as [number, number, number]}>
-          <sphereGeometry args={[0.04, 10, 10]} />
-          <meshStandardMaterial ref={i === 0 ? lamp : undefined} color={AMBER} emissive={AMBER} emissiveIntensity={1.6} />
-        </mesh>
-      ))}
-      <pointLight color={AMBER} intensity={5} distance={5} decay={2} />
+    <group ref={ref}>
+      <Points positions={positions} colors={colors} stride={3} frustumCulled={false}>
+        <PointMaterial transparent vertexColors size={0.12} sizeAttenuation depthWrite={false} fog={false} />
+      </Points>
     </group>
+  )
+}
+
+/** Environment lokal dari Lightformer — pantulan logam tanpa mengunduh HDR. */
+function StudioLights() {
+  return (
+    <Environment resolution={256} frames={1}>
+      <Lightformer form="rect" intensity={2.2} color="#ffffff" position={[0, 6, 2]} scale={[12, 2, 1]} rotation-x={Math.PI / 2} />
+      <Lightformer form="rect" intensity={3} color={AMBER} position={[6, 1, 2]} scale={[3, 5, 1]} rotation-y={-Math.PI / 2} />
+      <Lightformer form="rect" intensity={2} color={CHILL} position={[-6, 0, -3]} scale={[4, 6, 1]} rotation-y={Math.PI / 2} />
+      <Lightformer form="ring" intensity={1.2} color="#ffffff" position={[0, -4, 4]} scale={3} />
+    </Environment>
   )
 }
 
 interface SceneProps {
   pointer: React.RefObject<{ x: number; y: number }>
+  rich: boolean
 }
 
-function Scene({ pointer }: SceneProps) {
-  const width = useThree((s) => s.size.width)
-  const desktop = width >= 1000
-  const mobile = width < 768
+function Scene({ pointer, rich }: SceneProps) {
+  const size = useThree((s) => s.size)
+  const desktop = size.width >= 1000
+  const mobile = size.width < 768
   const { activeId } = useActiveSection()
   const [hovered, setHovered] = useState<SectionId | null>(null)
   const time = useRef(0)
+  const intro = useRef(0)
   const rig = useRef<Group>(null)
+  const zoom = useRef<Group>(null)
 
   const ringPoints = useMemo(() => RINGS.map((r) => circle(r.radius)), [])
 
   useEffect(() => {
-    document.body.style.cursor = hovered ? 'pointer' : ''
-    return () => {
-      document.body.style.cursor = ''
-    }
+    document.body.classList.toggle('sat-hover', !!hovered)
+    return () => document.body.classList.remove('sat-hover')
   }, [hovered])
 
   const onSelect = useCallback((id: SectionId) => {
@@ -178,70 +114,113 @@ function Scene({ pointer }: SceneProps) {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   }, [])
 
-  // posisi & skala stasiun mengikuti lebar layar, supaya tidak menutupi teks Hero
+  // ukuran frame di z=0 untuk kamera dasar; stasiun diletakkan relatif terhadapnya
+  const frameW = FRAME_H * (size.width / size.height)
+  const fit = Math.min(1, Math.max(0.7, frameW / 13))
   const layout = desktop
-    ? { pos: [2.7, 0.75, 0] as const, scale: 0.85 }
+    ? { pos: [frameW * 0.2, FRAME_H * 0.17, 0] as const, scale: 0.85 * fit }
     : mobile
-      ? { pos: [0.6, 2.3, -1] as const, scale: 0.5 }
-      : { pos: [1.8, 1.7, -1] as const, scale: 0.62 }
+      ? { pos: [frameW * 0.12, FRAME_H * 0.3, -1] as const, scale: 0.5 }
+      : { pos: [frameW * 0.18, FRAME_H * 0.24, -1] as const, scale: 0.62 }
+
+  // planet jauh di belakang, kanan bawah; ukuran frame di kedalamannya
+  const planetDepth = CAM_Z + 7
+  const pH = (FRAME_H * planetDepth) / CAM_Z
+  const pW = pH * (size.width / size.height)
+  const planetPos: [number, number, number] = desktop ? [pW * 0.38, -pH * 0.64, -7] : [pW * 0.3, -pH * 0.62, -7]
 
   useFrame((state, delta) => {
     if (!hovered) time.current += delta
+    if (document.body.classList.contains('ready')) intro.current = Math.min(1, intro.current + delta / INTRO_SECONDS)
+    const e = 1 - Math.pow(1 - intro.current, 3)
+
     const progress = Math.min(window.scrollY / window.innerHeight, 1)
     const cam = state.camera
     const p = pointer.current ?? { x: 0, y: 0 }
     const tx = p.x * 0.45
     const ty = 0.9 + p.y * 0.3
-    const tz = 9 + progress * 4
+    const tz = CAM_Z + (1 - e) * 6 + progress * 4
     const k = Math.min(1, delta * 2.5)
     cam.position.x += (tx - cam.position.x) * k
     cam.position.y += (ty - cam.position.y) * k
     cam.position.z += (tz - cam.position.z) * k
     cam.lookAt(0, 0.6, 0)
-    if (rig.current) rig.current.rotation.y = progress * 0.9
+    if (rig.current) rig.current.rotation.y = progress * 0.9 + (1 - e) * -1.2
+    if (zoom.current) zoom.current.scale.setScalar(0.7 + 0.3 * e)
   })
 
   return (
     <>
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[-4, 5, 3]} intensity={1.4} color="#b8c7d6" />
-      <directionalLight position={[5, -2, -4]} intensity={0.4} color={CHILL} />
+      <color attach="background" args={[VOID]} />
+      <fog attach="fog" args={[VOID, 10, 22]} />
+      <StudioLights />
+      <ambientLight intensity={0.25} />
+      <directionalLight position={[5, 3, 6]} intensity={1.6} color="#ffe3b0" />
+      {/* rim light dari belakang: memisahkan siluet dari latar gelap */}
+      <directionalLight position={[-2, 3, -6]} intensity={3} color={CHILL} />
+
+      <HeroStars count={mobile ? 500 : 1400} />
+      <Planet position={planetPos} />
 
       <group position={layout.pos} scale={layout.scale}>
-        <group ref={rig}>
-          <Station />
-          {RINGS.map((ring, ri) => {
-            const lit = SATS.some((s) => s.ring === ri && s.id === hovered)
-            return (
-              <group key={ri} rotation={ring.tilt}>
-                <Line
-                  points={ringPoints[ri]}
-                  color={lit ? AMBER : '#8A9198'}
-                  lineWidth={lit ? 1.4 : 0.8}
-                  transparent
-                  opacity={lit ? 0.85 : 0.22}
-                />
-                {SATS.filter((s) => s.ring === ri).map((s) => (
-                  <Satellite
-                    key={s.id}
-                    id={s.id}
-                    no={s.no}
-                    radius={ring.radius}
-                    phase={s.phase}
-                    speed={ring.speed}
-                    active={s.id === activeId}
-                    hovered={s.id === hovered}
-                    interactive={desktop}
-                    time={time}
-                    onHover={setHovered}
-                    onSelect={onSelect}
-                  />
-                ))}
-              </group>
-            )
-          })}
+        <group ref={zoom}>
+          <PresentationControls
+            enabled={desktop}
+            global
+            cursor={false}
+            snap
+            speed={1.4}
+            polar={[-0.3, 0.3]}
+            azimuth={[-0.7, 0.7]}
+          >
+            <group ref={rig}>
+              <Station />
+              <DustBelt count={mobile ? 400 : 1200} />
+              {RINGS.map((ring, ri) => {
+                const lit = SATS.some((s) => s.ring === ri && s.id === hovered)
+                return (
+                  <group key={ri} rotation={ring.tilt}>
+                    <Line
+                      points={ringPoints[ri]}
+                      color={lit ? AMBER : ring.tint}
+                      lineWidth={lit ? 2 : 1}
+                      dashed={ring.dashed && !lit}
+                      dashSize={0.18}
+                      gapSize={0.12}
+                      transparent
+                      opacity={lit ? 1 : 0.45}
+                    />
+                    {SATS.filter((s) => s.ring === ri).map((s) => (
+                      <Satellite
+                        key={s.id}
+                        id={s.id}
+                        no={s.no}
+                        radius={ring.radius}
+                        phase={s.phase}
+                        speed={ring.speed}
+                        tint={ring.tint}
+                        active={s.id === activeId}
+                        hovered={s.id === hovered}
+                        interactive={desktop}
+                        trail={rich}
+                        time={time}
+                        onHover={setHovered}
+                        onSelect={onSelect}
+                      />
+                    ))}
+                  </group>
+                )
+              })}
+            </group>
+          </PresentationControls>
         </group>
       </group>
+
+      {rich && (
+        <EffectComposer multisampling={0}>
+          <Bloom mipmapBlur luminanceThreshold={1} luminanceSmoothing={0.2} intensity={1.1} radius={0.7} />
+        </EffectComposer>
+      )}
     </>
   )
 }
@@ -251,6 +230,9 @@ export default function OrbitalStation() {
   const host = useRef<HTMLDivElement>(null)
   const pointer = useRef({ x: 0, y: 0 })
   const [visible, setVisible] = useState(true)
+  // bloom + trail hanya di desktop, dan dimatikan bila FPS turun
+  const [rich, setRich] = useState(() => window.innerWidth >= 1000)
+  const [dpr, setDpr] = useState(1.75)
 
   useEffect(() => {
     const el = host.current
@@ -271,12 +253,18 @@ export default function OrbitalStation() {
   return (
     <div className="hero-stage" ref={host}>
       <Canvas
-        camera={{ position: [0, 0.9, 9], fov: 40 }}
-        dpr={[1, 1.75]}
-        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        camera={{ position: [0, 0.9, CAM_Z + 6], fov: FOV }}
+        dpr={[1, dpr]}
+        gl={{ antialias: true, powerPreference: 'high-performance' }}
         frameloop={visible ? 'always' : 'never'}
       >
-        <Scene pointer={pointer} />
+        <PerformanceMonitor
+          onDecline={() => {
+            setRich(false)
+            setDpr(1)
+          }}
+        />
+        <Scene pointer={pointer} rich={rich} />
       </Canvas>
     </div>
   )

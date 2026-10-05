@@ -32,8 +32,8 @@ export const ui = {
   'hero.cta1': { id: 'Lihat rekam jejak', en: 'See the track record' },
   'hero.cta2': { id: 'Lihat project', en: 'See the projects' },
   'hero.hint': {
-    id: 'Klik satelit untuk menuju tiap section',
-    en: 'Click a satellite to jump to its section',
+    id: 'Drag untuk memutar · klik satelit untuk navigasi',
+    en: 'Drag to rotate · click a satellite to navigate',
   },
 
   'panel.title': { id: 'Status operator', en: 'Operator status' },
