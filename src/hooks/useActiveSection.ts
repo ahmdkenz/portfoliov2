@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 import { SECTION_IDS, type SectionId } from '../types/content'
 
 interface ActiveSection {
@@ -7,43 +7,57 @@ interface ActiveSection {
   percent: number
 }
 
-/** Scroll-spy rAF-throttled: section aktif, indeksnya, dan persentase scroll halaman. */
-export function useActiveSection(): ActiveSection {
-  const [state, setState] = useState<ActiveSection>({ activeId: SECTION_IDS[0], activeIndex: 0, percent: 0 })
+/** Satu scroll-spy bersama untuk semua pemakai; objek state hanya diganti bila nilainya berubah. */
+let state: ActiveSection = { activeId: SECTION_IDS[0], activeIndex: 0, percent: 0 }
+const listeners = new Set<() => void>()
+let ticking = false
 
-  useEffect(() => {
-    let ticking = false
+function compute() {
+  ticking = false
+  const y = window.scrollY
+  const docH = document.documentElement.scrollHeight - window.innerHeight
+  const percent = docH > 0 ? Math.round((y / docH) * 100) : 0
 
-    const compute = () => {
-      const y = window.scrollY
-      const docH = document.documentElement.scrollHeight - window.innerHeight
-      const percent = docH > 0 ? Math.round((y / docH) * 100) : 0
+  let activeIndex = 0
+  SECTION_IDS.forEach((id, idx) => {
+    const el = document.getElementById(id)
+    if (el && y >= el.offsetTop - window.innerHeight * 0.42) activeIndex = idx
+  })
 
-      let activeIndex = 0
-      SECTION_IDS.forEach((id, idx) => {
-        const el = document.getElementById(id)
-        if (el && y >= el.offsetTop - window.innerHeight * 0.42) activeIndex = idx
-      })
+  if (activeIndex === state.activeIndex && percent === state.percent) return
+  state = { activeId: SECTION_IDS[activeIndex], activeIndex, percent }
+  listeners.forEach((l) => l())
+}
 
-      setState({ activeId: SECTION_IDS[activeIndex], activeIndex, percent })
-      ticking = false
-    }
+function onScroll() {
+  if (!ticking) {
+    window.requestAnimationFrame(compute)
+    ticking = true
+  }
+}
 
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(compute)
-        ticking = true
-      }
-    }
-
-    compute()
+function subscribe(listener: () => void) {
+  listeners.add(listener)
+  if (listeners.size === 1) {
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
-    return () => {
+    compute()
+  }
+  return () => {
+    listeners.delete(listener)
+    if (listeners.size === 0) {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }
-  }, [])
+  }
+}
 
-  return state
+/** Scroll-spy rAF-throttled: section aktif, indeksnya, dan persentase scroll halaman. */
+export function useActiveSection(): ActiveSection {
+  return useSyncExternalStore(subscribe, () => state)
+}
+
+/** Hanya id section aktif — tidak me-render ulang saat scroll selama section-nya sama. */
+export function useActiveId(): SectionId {
+  return useSyncExternalStore(subscribe, () => state.activeId)
 }

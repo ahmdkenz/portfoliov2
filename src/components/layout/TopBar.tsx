@@ -1,5 +1,5 @@
 import { useT } from '../../context/LanguageContext'
-import { useActiveSection } from '../../hooks/useActiveSection'
+import { useActiveId } from '../../hooks/useActiveSection'
 import { SECTION_IDS } from '../../types/content'
 import { cvHref } from '../../data/profile'
 
@@ -12,7 +12,7 @@ const NAV_KEYS = SECTION_IDS.map((id) => `nav.${id}` as const)
 
 export function TopBar({ drawerOpen, onToggleDrawer }: TopBarProps) {
   const { t, lang, setLang } = useT()
-  const { activeId } = useActiveSection()
+  const activeId = useActiveId()
 
   return (
     <header className="topbar">

@@ -12,7 +12,14 @@ export function Portrait() {
           <path d="M11 57c2-11 10.5-17 21-17s19 6 21 17" />
         </svg>
       ) : (
-        <img src="/img/my%20photo.png" alt="Ahmad Nur Hafidz" onError={() => setBroken(true)} />
+        <img
+          src="/img/my-photo.webp"
+          alt="Ahmad Nur Hafidz"
+          width={64}
+          height={64}
+          decoding="async"
+          onError={() => setBroken(true)}
+        />
       )}
     </span>
   )

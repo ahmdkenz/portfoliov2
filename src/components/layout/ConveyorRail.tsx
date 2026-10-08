@@ -1,13 +1,13 @@
 import { useLayoutEffect, useRef } from 'react'
 import { useT } from '../../context/LanguageContext'
-import { useActiveSection } from '../../hooks/useActiveSection'
+import { useActiveId } from '../../hooks/useActiveSection'
 import { SECTION_IDS } from '../../types/content'
 
 const RAIL_KEYS = SECTION_IDS.map((id) => `rail.${id}` as const)
 
 export function ConveyorRail() {
   const { t } = useT()
-  const { activeId } = useActiveSection()
+  const activeId = useActiveId()
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([])
   const batchRef = useRef<HTMLSpanElement | null>(null)
 

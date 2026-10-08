@@ -11,7 +11,7 @@ import { StudioLights } from './StudioLights'
 import { useStage } from './useStage'
 import { inSphere, starColors } from './random'
 import { AMBER, AMBER_DIM, CHILL, STEEL, TEAL, VOID } from './palette'
-import { useActiveSection } from '../../hooks/useActiveSection'
+import { useActiveId } from '../../hooks/useActiveSection'
 import type { SectionId } from '../../types/content'
 
 /** Tiga bidang orbit; satelit dibagi ke bidang-bidang ini. Tiap cincin punya nada warna sendiri. */
@@ -77,7 +77,7 @@ function Scene({ pointer, rich }: SceneProps) {
   const size = useThree((s) => s.size)
   const desktop = size.width >= 1000
   const mobile = size.width < 768
-  const { activeId } = useActiveSection()
+  const activeId = useActiveId()
   const [hovered, setHovered] = useState<SectionId | null>(null)
   const time = useRef(0)
   const intro = useRef(0)
@@ -211,15 +211,17 @@ function Scene({ pointer, rich }: SceneProps) {
 export default function OrbitalStation() {
   const { host, pointer, visible } = useStage()
   // bloom + trail hanya di desktop, dan dimatikan bila FPS turun
-  const [rich, setRich] = useState(() => window.innerWidth >= 1000)
-  const [dpr, setDpr] = useState(1.75)
+  const [initialRich] = useState(() => window.innerWidth >= 1000)
+  const [rich, setRich] = useState(initialRich)
+  const [dpr, setDpr] = useState(1.5)
 
   return (
     <div className="hero-stage" ref={host}>
       <Canvas
         camera={{ position: [0, 0.9, CAM_Z + 6], fov: FOV }}
         dpr={[1, dpr]}
-        gl={{ antialias: true, powerPreference: 'high-performance' }}
+        // composer (multisampling 0) merender scene ke target sendiri, jadi MSAA canvas hanya terpakai tanpa Bloom
+        gl={{ antialias: !initialRich, powerPreference: 'high-performance' }}
         frameloop={visible ? 'always' : 'never'}
       >
         <PerformanceMonitor
